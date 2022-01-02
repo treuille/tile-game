@@ -47,17 +47,17 @@ def find_all_boards_iteratively(board: np.ndarray) -> set:
             if permuted_board_key not in all_boards:
                 unprocessed_boards.append(permuted_board)
                 all_boards.add(permuted_board_key)
-                # if len(all_boards) % 100000 == 0:
-                #     print(
-                #         f"There are now {len(unprocessed_boards)} boards to process, "
-                #         f"and {len(all_boards)} discovered boards."
-                #     )
+                if len(all_boards) % 100000 == 0:
+                    print(
+                        f"There are now {len(unprocessed_boards)} boards to process, "
+                        f"and {len(all_boards)} discovered boards."
+                    )
     return all_boards
 
 
-def get_board_key(board: np.ndarray) -> tuple:
+def get_board_key(board: np.ndarray) -> int:
     """Returns an immutable key fot the board which can be placed in a set."""
-    return tuple(board.flat)
+    return hash(tuple(board.flat))
 
 
 def recurse_through_all_boards(board: np.ndarray, all_boards: set):
