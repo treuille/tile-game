@@ -16,39 +16,32 @@ def main():
     print(f"At most, it can have {max_solutions} solutions.")
 
     # Create the initial board
-    board = np.arange(tiles).reshape(w, h) - 0
-    all_boards = set()
-    # print(board)
-    # print(board.dtype)
-    find_all_boards(board, all_boards)
-    print(f"Found {len(all_boards)} / {max_solutions} boards.")
+    board = np.arange(tiles).reshape(w, h)
+
+    # Find the solution recursively.
+    all_boards = find_all_boards_recursively(board)
+    print(f"Found {len(all_boards)} / {max_solutions} boards recursively.")
     print(f"The solution ID is {hash(tuple(all_boards))}.")
-    # x = set()
-    # print(x)
 
-    # def add_1(x):
-    #     x.add(1)
-
-    # add_1(x)
-    # print(x)
-    # add_1(x)
-    # print(x)
-
-    # # all_boards = set()
-    # print(all_boards)
-    # return
-    # print(all_boards)
-    # print(all_boards)
-
-    # board = permute(board, (0, 0), (1, 1))
-    # all_boards.add(tuple(board.flat))
-    # print(all_boards)
-    # # print("===")
-    # # print(board)
-    # # print("===")
+    # Find the solution iteratively.
+    all_boards = find_all_boards_iteratively(board)
+    print(f"Found {len(all_boards)} / {max_solutions} boards iteratively.")
+    print(f"The solution ID is {hash(tuple(all_boards))}.")
 
 
-def find_all_boards(board: np.ndarray, all_boards: set):
+def find_all_boards_recursively(board: np.ndarray) -> set:
+    all_boards = set()
+    recurse_through_all_boards(board, all_boards)
+    return all_boards
+
+
+def find_all_boards_iteratively(board: np.ndarray) -> set:
+    all_boards = set()
+    recurse_through_all_boards(board, all_boards)
+    return all_boards
+
+
+def recurse_through_all_boards(board: np.ndarray, all_boards: set):
     """Depth-first search through all adjacent boards."""
     board_key = tuple(board.flat)
     if board_key in all_boards:
@@ -58,7 +51,7 @@ def find_all_boards(board: np.ndarray, all_boards: set):
     for permuted_board in slide_iter(board):
         print(f"found ({len(all_boards)} total))")
         print(permuted_board)
-        find_all_boards(permuted_board, all_boards)
+        recurse_through_all_boards(permuted_board, all_boards)
         # final
         # board_key = tuple(permuted_board.flat)
         # if board_key
