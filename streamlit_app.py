@@ -18,15 +18,18 @@ def main():
     # Create the initial board
     board = np.arange(tiles).reshape(w, h)
 
-    # Find the solution recursively.
-    all_boards = find_all_boards_recursively(board)
-    print(f"Found {len(all_boards)} / {max_solutions} boards recursively.")
-    print(f"The solution ID is {hash(tuple(all_boards))}.")
+    # # Find the solution recursively.
+    # all_boards_1 = find_all_boards_recursively(board)
+    # print(f"Found {len(all_boards_1)} / {max_solutions} boards recursively.")
+    # print(f"The solution ID is {hash(tuple(sorted(all_boards_1)))}.")
 
     # Find the solution iteratively.
-    all_boards = find_all_boards_iteratively(board)
-    print(f"Found {len(all_boards)} / {max_solutions} boards iteratively.")
-    print(f"The solution ID is {hash(tuple(all_boards))}.")
+    all_boards_2 = find_all_boards_iteratively(board)
+    print(f"Found {len(all_boards_2)} / {max_solutions} boards iteratively.")
+    # print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
+    # print(f"The solution ID is {hash(tuple(all_boards_2))}.")
+
+    # print(all_boards_1 == all_boards_2)
 
 
 def find_all_boards_recursively(board: np.ndarray) -> set:
@@ -36,17 +39,23 @@ def find_all_boards_recursively(board: np.ndarray) -> set:
 
 
 def find_all_boards_iteratively(board: np.ndarray) -> set:
-    all_boards = set()
+    all_boards = {get_board_key(board)}
+    unprocessed_boards = [board]
+    while unprocessed_boards:
+        board = unprocessed_boards.pop()
+        board_key = get_board_key(board)
+        assert board_key in all_boards
+        for permuted_board in slide_iter(board):
+            permuted_board_key = get_board_key(permuted_board)
+            if permuted_board_key not in all_boards:
+                unprocessed_boards.append(permuted_board)
+                all_boards.add(permuted_board_key)
+                if len(all_boards) % 100000 == 0:
+                    print(
+                        f"There are now {len(unprocessed_boards)} boards to process, "
+                        f"and {len(all_boards)} discovered boards."
+                    )
     return all_boards
-    # unprocessed_boards = [board]
-    # while unprocessed_boards:
-    #     board = unprocessed_boards.pop()
-    #     board_key =
-    #     assert board_key not in all_boards
-    #     all_boards.add(board_key)
-    #     assert board not in all_boards
-    # recurse_through_all_boards(board, all_boards)
-    # return all_boards
 
 
 def get_board_key(board: np.ndarray) -> tuple:
@@ -62,8 +71,8 @@ def recurse_through_all_boards(board: np.ndarray, all_boards: set):
     assert board_key not in all_boards
     all_boards.add(board_key)
     for permuted_board in slide_iter(board):
-        print(f"found ({len(all_boards)} total))")
-        print(permuted_board)
+        # print(f"found ({len(all_boards_1)} total))")
+        # print(permuted_board)
         recurse_through_all_boards(permuted_board, all_boards)
 
 
