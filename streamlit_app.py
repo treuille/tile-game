@@ -22,6 +22,7 @@ def main():
     # print(board.dtype)
     find_all_boards(board, all_boards)
     print(f"Found {len(all_boards)} / {max_solutions} boards.")
+    print(f"The solution ID is {hash(tuple(all_boards))}.")
     # x = set()
     # print(x)
 
