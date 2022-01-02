@@ -26,10 +26,7 @@ def main():
     # Find the solution iteratively.
     all_boards_2 = find_all_boards_iteratively(board)
     print(f"Found {len(all_boards_2)} / {max_solutions} boards iteratively.")
-    # print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
-    # print(f"The solution ID is {hash(tuple(all_boards_2))}.")
-
-    # print(all_boards_1 == all_boards_2)
+    print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
 
 
 def find_all_boards_recursively(board: np.ndarray) -> set:
@@ -50,11 +47,11 @@ def find_all_boards_iteratively(board: np.ndarray) -> set:
             if permuted_board_key not in all_boards:
                 unprocessed_boards.append(permuted_board)
                 all_boards.add(permuted_board_key)
-                if len(all_boards) % 100000 == 0:
-                    print(
-                        f"There are now {len(unprocessed_boards)} boards to process, "
-                        f"and {len(all_boards)} discovered boards."
-                    )
+                # if len(all_boards) % 100000 == 0:
+                #     print(
+                #         f"There are now {len(unprocessed_boards)} boards to process, "
+                #         f"and {len(all_boards)} discovered boards."
+                #     )
     return all_boards
 
 
@@ -71,19 +68,13 @@ def recurse_through_all_boards(board: np.ndarray, all_boards: set):
     assert board_key not in all_boards
     all_boards.add(board_key)
     for permuted_board in slide_iter(board):
-        # print(f"found ({len(all_boards_1)} total))")
-        # print(permuted_board)
         recurse_through_all_boards(permuted_board, all_boards)
 
 
 def slide_iter(board):
     w, h = board.shape
     space = np.array(np.where(board == 0)).T[0]
-    # print(space)
-    # print(board[tuple(space)])
-    # print(DIRECTIONS)
     adjacencies = space + DIRECTIONS
-    # print("adj", adjacencies)
     in_bounds = np.logical_and.reduce(
         [  # type: ignore
             adjacencies[:, 0] >= 0,
@@ -92,22 +83,13 @@ def slide_iter(board):
             adjacencies[:, 1] < h,
         ]
     )
-    # print("in_bounds", in_bounds)
     adjacencies = adjacencies[in_bounds]
-    # print("adj", adjacencies)
-    # adjacent_tiles = board[adjacencies[..., 0], adjacencies[..., 1]]
-    # print("tiles", adjacent_tiles, adjacent_tiles.shape)
-
     return (permute(board, space, adj) for adj in adjacencies)
-    # print("perm", permute(board, (0, 0), (1, -1)))
 
 
 def permute(board, pt_1, pt_2):
     pt_1, pt_2 = tuple(pt_1), tuple(pt_2)
     board_2 = np.array(board)
-    # print(board, id(board))
-    # print(board_2, id(board_2))
-    # print(pt_1, pt_2)
     board_2[pt_1] = board[pt_2]
     board_2[pt_2] = board[pt_1]
     return board_2
