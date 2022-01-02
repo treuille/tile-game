@@ -37,13 +37,26 @@ def find_all_boards_recursively(board: np.ndarray) -> set:
 
 def find_all_boards_iteratively(board: np.ndarray) -> set:
     all_boards = set()
-    recurse_through_all_boards(board, all_boards)
     return all_boards
+    # unprocessed_boards = [board]
+    # while unprocessed_boards:
+    #     board = unprocessed_boards.pop()
+    #     board_key =
+    #     assert board_key not in all_boards
+    #     all_boards.add(board_key)
+    #     assert board not in all_boards
+    # recurse_through_all_boards(board, all_boards)
+    # return all_boards
+
+
+def get_board_key(board: np.ndarray) -> tuple:
+    """Returns an immutable key fot the board which can be placed in a set."""
+    return tuple(board.flat)
 
 
 def recurse_through_all_boards(board: np.ndarray, all_boards: set):
     """Depth-first search through all adjacent boards."""
-    board_key = tuple(board.flat)
+    board_key = get_board_key(board)
     if board_key in all_boards:
         return
     assert board_key not in all_boards
@@ -52,14 +65,6 @@ def recurse_through_all_boards(board: np.ndarray, all_boards: set):
         print(f"found ({len(all_boards)} total))")
         print(permuted_board)
         recurse_through_all_boards(permuted_board, all_boards)
-        # final
-        # board_key = tuple(permuted_board.flat)
-        # if board_key
-        # print(permuted_board)
-        # all_boards.add()
-        # print(all_boards)
-    # # # print("permuted", permuted_boards)
-    # for
 
 
 def slide_iter(board):
