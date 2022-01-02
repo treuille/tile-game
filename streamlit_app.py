@@ -16,7 +16,7 @@ def main():
     print(f"At most, it can have {max_solutions} solutions.")
 
     # Create the initial board
-    board = np.arange(tiles).reshape(w, h)
+    board = np.arange(tiles, dtype="B").reshape(w, h)
 
     # # Find the solution recursively.
     # all_boards_1 = find_all_boards_recursively(board)
@@ -26,7 +26,7 @@ def main():
     # Find the solution iteratively.
     all_boards_2 = find_all_boards_iteratively(board)
     print(f"Found {len(all_boards_2)} / {max_solutions} boards iteratively.")
-    print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
+    # print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
 
 
 def find_all_boards_recursively(board: np.ndarray) -> set:
@@ -57,7 +57,7 @@ def find_all_boards_iteratively(board: np.ndarray) -> set:
 
 def get_board_key(board: np.ndarray) -> int:
     """Returns an immutable key fot the board which can be placed in a set."""
-    return hash(tuple(board.flat))
+    return hash(board.tobytes())
 
 
 def recurse_through_all_boards(board: np.ndarray, all_boards: set):
