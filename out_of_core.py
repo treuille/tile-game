@@ -10,7 +10,7 @@ class IntSet:
     """This class implements add-only, set-like semantics for a large number of Python
     ints."""
 
-    def __init__(self, items_per_bundle: int = 10):
+    def __init__(self, items_per_bundle: int = 1000000):
         """
         Constucts a new IntSet.
 
@@ -39,7 +39,6 @@ class IntSet:
                 # This indicates that item is larger than all elements in the bundle.
                 continue
             if frozen_bundle[index] == item:
-                print("Found", item, "in", frozen_bundle, "at", index)
                 return True
         return False
 
@@ -60,45 +59,19 @@ class IntSet:
                 bundle_filename,
                 dtype=np.int_,
                 mode="w+",
-                shape=(self._items_per_bundle),
+                shape=self._items_per_bundle,
             )
 
-            # print(list(bundle[:]))
-            # temp_array = np.array(self._current_bundle, np.int_)
-            # print(temp_array.dtype)
-
+            # Isert sorted data into the bundle.
             bundle[:] = np.fromiter(self._current_bundle, dtype=np.int_)
-
-            # print(list(self._current_bundle))
-            # print(list(bundle[:]))
-
             np.ndarray.sort(bundle)
 
-            # print(list(sorted(self._current_bundle)))
-            # print(list(bundle[:]))
-
+            # Clean up memory
             bundle.flush()
             self._current_bundle.clear()
 
-            # print("flushed bundle")
-            # print(list(self._current_bundle))
-            # the_hash = hash("hello")
-            # print(the_hash, type(the_hash))
-            # print(bundle_filename)
-
+            # Remember this new frozen_bundle
             self._frozen_bundles.append(bundle)
-
-            # print(list(sorted(self._current_bundle)))
-            # print(list(self._frozen_bundles[-1]))
-
-            print(f"There are now {len(self._frozen_bundles)} frozen bundles.")
-
-            # # print(list(self._current_bundle))
-            # # the_hash = hash("hello")
-            # # print(the_hash, type(the_hash))
-            # # print(bundle_filename)
-
-            # raise NotImplementedError("add")
 
     @staticmethod
     def test():
