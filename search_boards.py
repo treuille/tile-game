@@ -16,31 +16,16 @@ def main():
     print(f"Testing tiles with size {w}x{h}...")
     print(f"At most, it can have {max_solutions} solutions.")
 
-    return
-
     # Create the initial board
     board = np.arange(tiles, dtype="B").reshape(w, h)
-
-    # # Find the solution recursively.
-    # all_boards_1 = find_all_boards_recursively(board)
-    # print(f"Found {len(all_boards_1)} / {max_solutions} boards recursively.")
-    # print(f"The solution ID is {hash(tuple(sorted(all_boards_1)))}.")
 
     # Find the solution iteratively.
     all_boards_2 = find_all_boards_iteratively(board)
     print(f"Found {len(all_boards_2)} / {max_solutions} boards iteratively.")
-    # print(f"The solution ID is {hash(tuple(sorted(all_boards_2)))}.")
 
 
-def find_all_boards_recursively(board: np.ndarray) -> set:
-    all_boards = set()
-    recurse_through_all_boards(board, all_boards)
-    return all_boards
-
-
-def find_all_boards_iteratively(board: np.ndarray) -> set:
-
-    all_boards = IntSet()
+def find_all_boards_iteratively(board: np.ndarray):
+    all_boards = IntSet(items_per_bundle=100000000)
     all_boards.add(get_board_key(board))
     unprocessed_boards = [board]
     while unprocessed_boards:
@@ -63,17 +48,6 @@ def find_all_boards_iteratively(board: np.ndarray) -> set:
 def get_board_key(board: np.ndarray) -> int:
     """Returns an immutable key fot the board which can be placed in a set."""
     return hash(board.tobytes())
-
-
-def recurse_through_all_boards(board: np.ndarray, all_boards: set):
-    """Depth-first search through all adjacent boards."""
-    board_key = get_board_key(board)
-    if board_key in all_boards:
-        return
-    assert board_key not in all_boards
-    all_boards.add(board_key)
-    for permuted_board in slide_iter(board):
-        recurse_through_all_boards(permuted_board, all_boards)
 
 
 def slide_iter(board):
