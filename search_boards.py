@@ -1,7 +1,7 @@
 import numpy as np
 import sys
 import math
-from out_of_core import IntSet
+from out_of_core import IntSet, GiantQueue
 
 DIRECTIONS = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])
 
@@ -25,9 +25,10 @@ def main():
 
 
 def find_all_boards_iteratively(board: np.ndarray):
-    all_boards = IntSet(items_per_bundle=100000000)
+    all_boards = IntSet(items_per_bundle=10000000)
     all_boards.add(get_board_key(board))
-    unprocessed_boards = [board]
+    unprocessed_boards = GiantQueue(items_per_bundle=10000000)
+    unprocessed_boards.append(board)
     while unprocessed_boards:
         board = unprocessed_boards.pop()
         board_key = get_board_key(board)
