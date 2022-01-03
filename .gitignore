@@ -1,1 +1,3 @@
+# Ignoring both out-of-core storage folders.
+queue/
 dat/
