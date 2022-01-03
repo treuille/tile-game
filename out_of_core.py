@@ -90,5 +90,32 @@ class IntSet:
         print("Test passed.")
 
 
+class GiantQueue:
+    """This class implements push() and pop() for a giant number of pickleable python
+    types. The output order of pop() is not guaranteed."""
+
+    def __init__(self, items_per_bundle: int = 10):
+        """
+        Constucts a new IntSet.
+
+        Parameters
+        ----------
+        items_per_bundle: int - the number of ints we store in each mem-mapped array
+        """
+        self._current_bundle: List = []
+        self._frozen_bundle_filenames: List[str] = []
+        self._items_per_bundle = items_per_bundle
+        self._data_dir: str = "./queue"
+
+        # Create a fresh data directory
+        os.system(f'rm -rf "{self._data_dir}" && mkdir -v "{self._data_dir}"')
+
+    @staticmethod
+    def test():
+        """Runs a test on giant queue."""
+        raise NotImplementedError("GiantQueue.test()")
+
+
 if __name__ == "__main__":
     IntSet.test()
+    GiantQueue.test()
