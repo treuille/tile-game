@@ -27,7 +27,7 @@ def main():
 def find_all_boards_iteratively(board: np.ndarray):
     all_boards = IntSet(items_per_bundle=10000000)
     all_boards.add(get_board_key(board))
-    unprocessed_boards = GiantQueue(items_per_bundle=10000000)
+    unprocessed_boards = GiantQueue(items_per_bundle=5000000)
     unprocessed_boards.append(board)
     while unprocessed_boards:
         board = unprocessed_boards.pop()
