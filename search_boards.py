@@ -1,6 +1,7 @@
 import numpy as np
 import sys
 import math
+from out_of_core import IntSet
 
 DIRECTIONS = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]])
 
@@ -14,6 +15,8 @@ def main():
     # Show header information.
     print(f"Testing tiles with size {w}x{h}...")
     print(f"At most, it can have {max_solutions} solutions.")
+
+    return
 
     # Create the initial board
     board = np.arange(tiles, dtype="B").reshape(w, h)
@@ -36,17 +39,19 @@ def find_all_boards_recursively(board: np.ndarray) -> set:
 
 
 def find_all_boards_iteratively(board: np.ndarray) -> set:
-    all_boards = {get_board_key(board)}
+
+    all_boards = IntSet()
+    all_boards.add(get_board_key(board))
     unprocessed_boards = [board]
     while unprocessed_boards:
         board = unprocessed_boards.pop()
         board_key = get_board_key(board)
         assert board_key in all_boards
-        for permuted_board in slide_iter(board):
-            permuted_board_key = get_board_key(permuted_board)
-            if permuted_board_key not in all_boards:
-                unprocessed_boards.append(permuted_board)
-                all_boards.add(permuted_board_key)
+        for board in slide_iter(board):
+            board_key = get_board_key(board)
+            if board_key not in all_boards:
+                unprocessed_boards.append(board)
+                all_boards.add(board_key)
                 if len(all_boards) % 100000 == 0:
                     print(
                         f"There are now {len(unprocessed_boards)} boards to process, "
